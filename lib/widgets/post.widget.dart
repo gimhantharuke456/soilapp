@@ -8,6 +8,7 @@ import 'package:soilapp/services/comment.service.dart';
 import 'package:soilapp/services/post.service.dart';
 import 'package:soilapp/widgets/comment.container.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:readmore/readmore.dart';
 
 class PostWidget extends StatelessWidget {
   final PostModel post;
@@ -91,14 +92,22 @@ class PostWidget extends StatelessWidget {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(post.description),
+            ReadMoreText(
+              post.description,
+              trimMode: TrimMode.Line,
+              trimLines: 5,
+            ),
             const SizedBox(height: 8),
             Chip(
               label: Text(
                 post.category,
                 style: const TextStyle(color: Colors.white),
               ),
-              backgroundColor: Colors.black,
+              backgroundColor: Colors.lightGreen,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  side: BorderSide.none),
+              elevation: 0,
             ),
             if (post.imageUrl != null) ...[
               const SizedBox(height: 8),
@@ -144,7 +153,49 @@ class PostWidget extends StatelessWidget {
                       const SizedBox(width: 16),
                       if (post.posedBy ==
                           FirebaseAuth.instance.currentUser?.uid)
-                        Icon(Icons.more_horiz, color: Colors.grey[600]),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_horiz, color: Colors.grey[600]),
+                          onSelected: (value) {
+                            if (value == 'delete') {
+                              // Implement your delete post logic here
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Text('Delete Post'),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text(
+                                          "Do u want to delete this question ?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("No"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            PostService()
+                                                .deletePost(post.id ?? '')
+                                                .then((value) =>
+                                                    Navigator.pop(context));
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Yes"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ];
+                          },
+                        )
                     ],
                   );
                 }),
