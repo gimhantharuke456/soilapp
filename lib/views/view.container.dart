@@ -4,6 +4,7 @@ import 'package:soilapp/providers/user.provider.dart';
 import 'package:soilapp/services/app.user.service.dart';
 import 'package:soilapp/views/forum/create.forum.view.dart';
 import 'package:soilapp/views/home/home.view.dart';
+import 'package:soilapp/views/home/main.menu.view.dart';
 import 'package:soilapp/views/profile/profile.view.dart';
 import 'package:soilapp/widgets/custom_filled_button.dart';
 
@@ -18,7 +19,7 @@ class _ViewContainerState extends State<ViewContainer> {
   int activeIndex = 0;
   final _userService = UserService();
   List<Widget> get views =>
-      [const HomeView(), const CreateForum(), const UserProfileView()];
+      [const MainMenuView(), const CreateForum(), const UserProfileView()];
 
   @override
   void initState() {

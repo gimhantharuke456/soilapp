@@ -60,7 +60,8 @@ class UserProfileView extends StatelessWidget {
             const SizedBox(height: 24),
             _buildInfoSection('Name', user.name),
             _buildInfoSection('Email', user.email),
-            _buildInfoSection('Description', user.description),
+            _buildInfoSection('Phone Number', user.phoneNumber),
+            _buildInfoSection('City', user.city),
             const SizedBox(height: 32),
             Center(
               child: SizedBox(

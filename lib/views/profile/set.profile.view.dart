@@ -24,9 +24,10 @@ class SetProfileView extends StatelessWidget {
             }
             return ProfileFormWidget(
               initialData: viewModel.currentUser,
-              onSave: (name, email, description) async {
+              onSave: (name, email, description, phoneNumber, city) async {
                 try {
-                  await viewModel.saveProfile(name, email, description);
+                  await viewModel.saveProfile(
+                      name, email, description, phoneNumber, city);
                   context.showSnackBar('Profile updated successfully');
                   Navigator.pop(context);
                 } catch (e) {

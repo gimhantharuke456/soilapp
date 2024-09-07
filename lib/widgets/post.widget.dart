@@ -80,6 +80,14 @@ class PostWidget extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.grey[600], fontSize: 12),
                                 ),
+                                if (snapshot.data?.isExpert ?? false)
+                                  Text(
+                                    'Expert',
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  )
                               ],
                             ),
                           ),

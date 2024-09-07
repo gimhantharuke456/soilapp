@@ -6,10 +6,13 @@ class PostService {
   final String collectionPath = 'posts';
 
   // Get all posts as a stream
-  Stream<List<PostModel>> getAllPosts() {
+  Stream<List<PostModel>> getAllPosts(String category) {
     try {
-      return _db.collection(collectionPath).snapshots().map((snapshot) =>
-          snapshot.docs
+      return _db
+          .collection(collectionPath)
+          .where("category", isEqualTo: category)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
               .map((doc) => PostModel.fromDocumentSnapshot(doc))
               .toList());
     } catch (e) {

@@ -25,8 +25,8 @@ class SetProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveProfile(
-      String name, String email, String description) async {
+  Future<void> saveProfile(String name, String email, String description,
+      String phoneNumber, String city) async {
     _isLoading = true;
     notifyListeners();
 
@@ -35,6 +35,8 @@ class SetProfileViewModel extends ChangeNotifier {
       name: name,
       email: email,
       description: description,
+      phoneNumber: phoneNumber,
+      city: city,
     );
 
     if (_currentUser == null) {

@@ -7,7 +7,7 @@ import 'package:soilapp/widgets/custom_filled_button.dart';
 
 class ProfileFormWidget extends StatefulWidget {
   final UserModel? initialData;
-  final Function(String, String, String) onSave;
+  final Function(String, String, String, String, String) onSave;
 
   const ProfileFormWidget({
     Key? key,
@@ -23,6 +23,8 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _descriptionController;
+  late TextEditingController _city;
+  late TextEditingController _phoneNumber;
 
   @override
   void initState() {
@@ -34,6 +36,9 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
             FirebaseAuth.instance.currentUser?.email);
     _descriptionController =
         TextEditingController(text: widget.initialData?.description ?? '');
+    _city = TextEditingController(text: widget.initialData?.city ?? '');
+    _phoneNumber =
+        TextEditingController(text: widget.initialData?.phoneNumber ?? '');
   }
 
   @override
@@ -46,6 +51,24 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
             controller: _nameController,
             hint: 'Name',
             label: 'Name',
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          CustomInputField(
+            controller: _phoneNumber,
+            hint: 'Phone',
+            label: 'Phone',
+            enabled: false,
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          CustomInputField(
+            controller: _city,
+            hint: 'City',
+            label: 'City',
+            enabled: false,
           ),
           const SizedBox(
             height: 8,
@@ -75,6 +98,8 @@ class _ProfileFormWidgetState extends State<ProfileFormWidget> {
                   _nameController.text,
                   _emailController.text,
                   _descriptionController.text,
+                  _city.text,
+                  _phoneNumber.text,
                 );
               },
               text: 'Save Profile',

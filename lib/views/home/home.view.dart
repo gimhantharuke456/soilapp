@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:soilapp/models/post.model.dart';
 import 'package:soilapp/services/post.service.dart';
+import 'package:soilapp/utils/constants.dart';
 import 'package:soilapp/widgets/post.widget.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final String category;
+  const HomeView({super.key, required this.category});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -22,7 +24,7 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('Forum'),
       ),
       body: StreamBuilder<List<PostModel>>(
-        stream: _postService.getAllPosts(),
+        stream: _postService.getAllPosts(widget.category),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
