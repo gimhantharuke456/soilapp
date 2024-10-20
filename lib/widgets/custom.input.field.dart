@@ -54,7 +54,7 @@ class CustomInputField extends StatelessWidget {
           if (label.isNotEmpty)
             Text(
               label,
-              style: labelStyle ?? Theme.of(context).textTheme.bodyText1,
+              style: labelStyle ?? Theme.of(context).textTheme.bodySmall,
             ),
           TextFormField(
             controller: controller,
@@ -70,7 +70,7 @@ class CustomInputField extends StatelessWidget {
               hintText: hint,
               fillColor: Colors.grey[100],
               filled: true,
-              hintStyle: hintStyle ?? Theme.of(context).textTheme.bodyText2,
+              hintStyle: hintStyle ?? Theme.of(context).textTheme.bodyMedium,
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
               border: OutlineInputBorder(

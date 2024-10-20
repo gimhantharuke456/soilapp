@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
+import 'dart:html' as html;
 
 class FileService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -22,6 +23,28 @@ class FileService {
       // Wait until the file is uploaded then fetch the download URL
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading file: $e');
+      throw Exception('Failed to upload file');
+    }
+  }
+
+  Future<String> uploadFileWeb(html.File file) async {
+    try {
+      // Generate a unique filename
+      final String fileName = '${Uuid().v4()}_${file.name}';
+
+      // Create a reference to the location you want to upload to in Firebase Storage
+      final Reference ref = _storage.ref().child('uploads/$fileName');
+
+      // Start the upload task
+      final UploadTask uploadTask = ref.putBlob(file);
+
+      // Wait for the upload to complete and get the download URL
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
 
       return downloadUrl;
     } catch (e) {

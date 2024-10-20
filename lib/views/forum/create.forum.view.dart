@@ -1,7 +1,8 @@
-import 'dart:io';
+import 'dart:html' as html;
+import 'dart:io' as io;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:soilapp/services/category.prediction.service.dart';
 import 'package:soilapp/services/category.service.dart';
 import 'package:soilapp/services/post.service.dart';
 import 'package:soilapp/services/file.service.dart';
@@ -21,32 +22,29 @@ class _CreateForumState extends State<CreateForum> {
   final TextEditingController _descriptionController = TextEditingController();
   final PostService _postService = PostService();
   final FileService _fileService = FileService();
-  final ImagePicker _imagePicker = ImagePicker();
   String predictedCategory = 'Other';
-  File? _image;
+  html.File? _image;
   bool _isLoading = false;
   String? _errorMessage;
+  String? _imageUrl;
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-
     super.dispose();
   }
 
   Future<void> _pickImage() async {
-    try {
-      final XFile? pickedFile =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
+    final html.FileUploadInputElement input = html.FileUploadInputElement()
+      ..accept = 'image/*';
+    input.click();
+
+    await input.onChange.first;
+    if (input.files!.isNotEmpty) {
       setState(() {
-        _errorMessage = 'Failed to pick image: $e';
+        _image = input.files![0];
+        _imageUrl = html.Url.createObjectUrlFromBlob(_image!);
       });
     }
   }
@@ -67,10 +65,10 @@ class _CreateForumState extends State<CreateForum> {
     try {
       String? imageUrl;
       if (_image != null) {
-        imageUrl = await _fileService.uploadFile(_image!);
+        imageUrl = await _fileService.uploadFileWeb(_image!);
       }
-      String? category =
-          await CategoryService().predictCategory(_descriptionController.text);
+      String? category = await CategoryPredictionService()
+          .predictCategory(_descriptionController.text);
       if (category != null) {
         setState(() {
           predictedCategory = category;
@@ -97,10 +95,10 @@ class _CreateForumState extends State<CreateForum> {
     } finally {
       setState(() {
         _isLoading = false;
-
         _titleController.clear();
         _descriptionController.clear();
         _image = null;
+        _imageUrl = null;
       });
     }
   }
@@ -134,9 +132,9 @@ class _CreateForumState extends State<CreateForum> {
               icon: const Icon(Icons.image),
               label: const Text('Pick Image'),
             ),
-            if (_image != null) ...[
+            if (_imageUrl != null) ...[
               const SizedBox(height: 16.0),
-              Image.file(_image!, height: 200),
+              Image.network(_imageUrl!, height: 200),
             ],
             if (_errorMessage != null) ...[
               const SizedBox(height: 16.0),

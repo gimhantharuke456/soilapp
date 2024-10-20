@@ -16,11 +16,9 @@ class CustomAppTheme {
         actionsIconTheme: IconThemeData(color: Colors.white),
       ),
       textTheme: const TextTheme(
-        bodyText1: TextStyle(color: Colors.black),
-        bodyText2: TextStyle(color: Colors.black),
-        headline1: TextStyle(color: Colors.black),
-        headline2: TextStyle(color: Colors.black),
-        caption: TextStyle(color: Colors.black),
+        bodyLarge: TextStyle(color: Colors.black),
+        bodyMedium: TextStyle(color: Colors.black),
+        bodySmall: TextStyle(color: Colors.black),
       ),
       buttonTheme: const ButtonThemeData(
         buttonColor: Colors.black,

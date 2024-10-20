@@ -9,6 +9,7 @@ import 'package:soilapp/services/post.service.dart';
 import 'package:soilapp/widgets/comment.container.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:readmore/readmore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PostWidget extends StatelessWidget {
   final PostModel post;
@@ -125,7 +126,7 @@ class PostWidget extends StatelessWidget {
                   post.imageUrl!,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: 200,
+                  height: 500,
                 ),
               ),
             ],
@@ -226,5 +227,68 @@ class PostWidget extends StatelessWidget {
     PostModel currentPost = post;
     currentPost.setLikeCount = post.likeCount + 1;
     PostService().updatePost(currentPost);
+  }
+
+  Widget _buildImage(String imageUrl) {
+    print(imageUrl);
+    if (kIsWeb) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 200,
+        headers: const {
+          'Access-Control-Allow-Origin': '*',
+        },
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: 200,
+            color: Colors.grey[300],
+            child: const Icon(Icons.error, color: Colors.red),
+          );
+        },
+      );
+    } else {
+      // For mobile, use the original Image.network
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 200,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: 200,
+            color: Colors.grey[300],
+            child: Icon(Icons.error, color: Colors.red),
+          );
+        },
+      );
+    }
   }
 }
