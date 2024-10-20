@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CategoryPredictionService {
-  final String apiKey = '';
+  final String apiKey =
+      'sk-None-0aYzl8VtMfUOcqU2Hb3KT3BlbkFJKuokat03bz7aCHvk55Fk';
   final String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final List<String> categories = [
